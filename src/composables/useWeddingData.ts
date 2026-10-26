@@ -4,10 +4,10 @@ import { todayISO } from '../utils/format'
 import { maharSeed, seserahanSeed, weddingPlanTaskSeed } from '../data/weddingPlannerSeed'
 
 const STORAGE_KEY = 'wedding-plan-v1'
-const DATA_SEED_VERSION = 1
+const DATA_SEED_VERSION = 2
 const seedItems = [...seserahanSeed, ...maharSeed]
 const defaultData = (): WeddingData => ({
-  settings: { coupleNames: '', weddingDate: '', budgetTarget: 0, currency: 'IDR' },
+  settings: { coupleNames: 'Abi & Isti', weddingDate: '', budgetTarget: 0, currency: 'IDR' },
   tasks: weddingPlanTaskSeed.map((task) => ({ ...task })),
   items: seedItems.map((item) => ({ ...item })),
   payments: [],
@@ -31,6 +31,7 @@ function loadData(): WeddingData {
       seedVersion: parsed.seedVersion ?? 0,
     }
     if ((data.seedVersion ?? 0) < DATA_SEED_VERSION) {
+      if (!data.settings.coupleNames.trim()) data.settings.coupleNames = 'Abi & Isti'
       for (const seed of seedItems) {
         const alreadyExists = data.items.some((item) => item.id === seed.id || (item.name === seed.name && item.category === seed.category))
         if (!alreadyExists) data.items.push({ ...seed })
